@@ -23,3 +23,6 @@
 
 * Veri oluştuktan sonra outlier var mı diye kontrol edelim
 
+* Literatür taramasının raporlanması
+
+* Related work 'lerin derlenmesi
