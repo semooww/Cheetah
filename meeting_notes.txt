@@ -1,0 +1,25 @@
+20.02.2023
+----------
+* Cheetah github reposunun oluşturulması. (fuatakal)
+
+* Kaggle'dan alınmış olan bu ds'yi kullanan herhangi bir yayın var mı? Yayın listesinin ve genel anlamda related work'ün oluşturulması.
+
+* Transfer learning yapamaz mıyız diye bir bakalım.
+
+* Augmentation için farklı çözümleri deneyelim. bknz. imgaug kütüphanesi.
+
+* Farklı önişleme yöntemleri beraber kullanılabilir mi? Böyle bir durumda en azından bazı sınıfların tahminlenmesinde başarım artırılabilir mi?
+
+* Hiperparametre tuning için bknz. hyperopt
+
+* whatsapp grubunun oluşturulması
+
+
+27.02.2023
+----------
+* Öncelikle modele verilecek verinin hazırlanmasına odaklanılmalı
+
+* Augmentation operasyonlarına göz gezdirelim
+
+* Veri oluştuktan sonra outlier var mı diye kontrol edelim
+
