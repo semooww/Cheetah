@@ -1,6 +1,6 @@
-
 import cv2
 import numpy as np
+
 
 # Cropping image to avoid from unnecessary black areas
 def deleteBlackAreas(filename):
@@ -26,8 +26,7 @@ def deleteBlackAreas(filename):
         return cv2.cvtColor(cv2.resize(img, image_size, interpolation=cv2.INTER_AREA), cv2.COLOR_BGR2RGB)
 
 
-
-#color_normalization of images
+# color_normalization of images
 def color_normalization(img):
     image_copy = img.copy()
     for i in range(3):
@@ -39,49 +38,59 @@ def color_normalization(img):
         image_copy[:, :, i] = (255 / (imrange + 0.0001) * (imi - minval))
     return image_copy
 
-def canny_edge(img):
-    t_lower = 20
-    t_upper = 120
-    edges = cv2.Canny(img, t_lower, t_upper, apertureSize=3, L2gradient=True)
-    return edges
 
 def convertToGray(img):
     img_copy = img.copy()
     img_copy = cv2.cvtColor(img_copy, cv2.COLOR_RGB2GRAY)
     return img_copy
 
-def hist_equalization(img):
-    array = np.asarray(img)
-    bin_cont = np.bincount(array.flatten(), minlength=256)
-    pixels = np.sum(bin_cont)
-    bin_cont = bin_cont / pixels
-    cumulative_sumhist = np.cumsum(bin_cont)
-    map = np.floor(255 * cumulative_sumhist).astype(np.uint8)
-    arr_list = list(array.flatten())
-    eq_arr = [map[p] for p in arr_list]
-    arr_back = np.reshape(np.asarray(eq_arr), array.shape)
-    return arr_back
-
-
-def ahe(img, rx=136, ry=185):
-    img_eq = np.empty((img.shape[0], img.shape[1]), dtype=np.uint8)
-    for i in range(0, img.shape[1], rx):
-        for j in range(0, img.shape[0], ry):
-            t = img[j:j + ry, i:i + rx]
-            c = hist_equalization(t)
-            img_eq[j:j + ry, i:i + rx] = c
-    return img_eq
 
 def convertColorSpace2XYZ(img):
     img_copy = cv2.cvtColor(img, cv2.COLOR_RGB2XYZ)
     return img_copy
 
-def convertColorSpace2HSV(img):
-    img_copy = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
-    return img_copy
 
 def binarization(img):
     img_copy = img.copy()
     img_copy = cv2.cvtColor(img_copy, cv2.COLOR_RGB2GRAY)
     img_copy = cv2.adaptiveThreshold(img_copy, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 3, 2)
     return img_copy
+
+
+def mahal(img, select=None, mean_pix=None):
+    arr = np.reshape(img, (img.shape[0] * img.shape[1], 3))
+    # no sampling.  use the entire image
+    if select is None:
+        select = arr
+    else:
+        # if 'select' is a number, generate an array of size 'select' containing
+        # random pixels in 'arr'.
+        # otherwise it should be a list of indices of pixels to choose.
+        select = arr[np.random.randint(0, arr.shape[0], select), :] if isinstance(select, int) else arr[select]
+
+    # calculate the covariance matrix inverse using the sampled array
+    invcovar = np.linalg.inv(np.cov(np.transpose(select)))
+
+    if mean_pix is None:
+        # no provided mean RGB vector.  assume we are using the images own
+        # mean RGB value
+        meandiff = arr - np.mean(select, axis=0)
+    else:
+        meandiff = arr - mean_pix
+
+    # calculate the difference between every pixel in 'arr' and the mean RGB vector.
+    # if provided, use the given mean RGB vector, otherwise calculate the mean RGB
+    # value of 'select'
+    meandiff = arr - (mean_pix if mean_pix is not None else np.mean(select, axis=0))
+
+    # calculate the first multiplication.
+    output = np.dot(meandiff, invcovar)
+
+    # do literally everything else all in this step, then reshape back to image dimensions and return
+    return np.sqrt(np.einsum('ij,ij->i', output, meandiff)).reshape(img.shape[:-1])
+
+def CLAHE(img):
+    img = cv2.cvtColor(img,cv2.COLOR_RGB2GRAY)
+    clahe = cv2.createCLAHE(clipLimit=5)
+    img = clahe.apply(img)
+    return img

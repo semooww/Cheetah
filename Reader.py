@@ -20,15 +20,20 @@ def create_dataset(df, type=0, mode=0):  # 0->float32 1->uint8
         if mode == 1:
             img = T.color_normalization(img)
         elif mode == 2:
-            img = T.canny_edge(img)
+            img = T.CLAHE(img)
+            img = cv2.merge((img, img, img))
         elif mode == 3:
             img = T.convertToGray(img)
+            img = cv2.merge((img, img, img))
         elif mode == 4:
             img = T.convertColorSpace2XYZ(img)
         elif mode == 5:
-            img = T.convertColorSpace2HSV(img)
-        elif mode == 6:
             img = T.binarization(img)
+            img = cv2.merge((img, img, img))
+        elif mode == 6:
+            img=T.mahal(img)
+            img = np.reshape(img, (img.shape[0], img.shape[1], 1))
+            img = cv2.merge((img, img, img))
         label = [0, 0, 0, 0]
         label[df.iloc[index]["class_label"]] += 1
         index += 1

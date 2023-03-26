@@ -56,13 +56,14 @@ def plot_conf_matrix(model, X_test, y_test, technique):
     plt.grid(False)
     plt.title(f"Confusion Matrix of {technique}")
     plt.savefig(f"Plots/{technique}_confusion_matrix.png")
-    return cm_evaluation(cm)
+    ret1, ret2 = cm_evaluation(cm)
+    return ret1, ret2
 
 
 def cm_evaluation(cm):
     number_of_class = 4
-    sensitivity = np.zeros(number_of_class, dtype="float32")  # TPR
-    specificity = np.zeros(number_of_class, dtype="float32")  # TNR=1-FPR
+    sensitivity = []  # TPR
+    specificity = []  # TNR=1-FPR
     for c in range(number_of_class):
         TP, FP, TN, FN = 0, 0, 0, 0
         for i in range(len(cm[0])):
@@ -77,6 +78,6 @@ def cm_evaluation(cm):
                     TN += cm[i][j]
         TPR = TP / (TP + FN)
         FPR = FP / (FP + TN)
-        sensitivity[c] = TPR
-        specificity[c] = 1 - FPR
-    return np.average(sensitivity), np.average(specificity)
+        sensitivity.append(TPR)
+        specificity.append(1 - FPR)
+    return np.mean(sensitivity), np.mean(specificity)
