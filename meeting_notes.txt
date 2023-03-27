@@ -26,3 +26,35 @@
 * Literatür taramasının raporlanması
 
 * Related work 'lerin derlenmesi
+
+
+20.03.2023
+----------
+* Class bazında makale arayışı
+
+* Gözle kolay anlaşılan bir rahatsızlıksa çıkartalım
+
+* Eğer iki class çok benziyorsa bunlara odaklanabiliriz
+
+* Sadece image preprocessing olarak yaklaşmıyoruz workflow değişti
+
+* Transfer learning için benchmark
+
+
+27.03.2023
+----------
+* Retina_disease sınıfının içeriği authora sorulacak
+
+* Retina_disease olmadan eğitim
+
+* Bazı processlerin seçilip kombinasyonları şeklinde eğitimi yapılması
+
+* Precision-f1 score gibi metriclerin eklenmesi
+
+* processlerin çıktılarının kaydedilmesi
+
+* Normal sınıfı dışındaki sınıflara fazladan process uygulanarak dağılımın eşitlenmesi
+
+* Makalenin introduction ve literature review kısımlarının tamamlanması
+
+* Önceki haftalardan kalan işler devam edecek
