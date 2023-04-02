@@ -7,7 +7,7 @@ import numpy as np
 # Display the distribution of data on the train and test
 def plot_pie_sets(arrays, technique):
     titles = ["Train Set", "Test Set"]
-    labels = ["Normal", "Cataract", "Glaucoma", "Retina Disease"]
+    labels = ["Normal", "Cataract", "Glaucoma"]
     fig = plt.figure(figsize=(12, 5))
     plt.title(f"Distribution of {technique}")
     plt.axis('off')
@@ -15,7 +15,7 @@ def plot_pie_sets(arrays, technique):
     for i in range(2):
         fig.add_subplot(1, 2, i + 1)
         arr = []
-        for j in range(4):
+        for j in range(3):
             arr.append((arrays[i] == j).sum())
         plt.title(titles[i])
         plt.pie(arr, autopct=lambda x: '{:.0f}'.format(x * np.array(arr).sum() / 100))
@@ -48,7 +48,7 @@ def plot_history(arrays, technique):
 
 
 def plot_conf_matrix(model, X_test, y_test, technique):
-    labels = ["Normal", "Cataract", "Glaucoma", "Retina Disease"]
+    labels = ["Normal", "Cataract", "Glaucoma"]
     y_pred = model.predict(X_test)
     cm = confusion_matrix(np.argmax(y_test, axis=1), np.argmax(y_pred, axis=1))
     disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
@@ -61,13 +61,13 @@ def plot_conf_matrix(model, X_test, y_test, technique):
 
 
 def cm_evaluation(cm):
-    number_of_class = 4
+    number_of_class = 3
     sensitivity = []  # TPR
     specificity = []  # TNR=1-FPR
     for c in range(number_of_class):
         TP, FP, TN, FN = 0, 0, 0, 0
-        for i in range(len(cm[0])):
-            for j in range(len(cm[[0]])):
+        for i in range(number_of_class):
+            for j in range(number_of_class):
                 if i == j and c == i:
                     TP += cm[i][j]
                 elif c == i:
@@ -76,8 +76,8 @@ def cm_evaluation(cm):
                     FP += cm[i][j]
                 else:
                     TN += cm[i][j]
-        TPR = TP / (TP + FN)
-        FPR = FP / (FP + TN)
+        TPR = TP / float((TP + FN))
+        FPR = FP / float((FP + TN))
         sensitivity.append(TPR)
         specificity.append(1 - FPR)
     return np.mean(sensitivity), np.mean(specificity)

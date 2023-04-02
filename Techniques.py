@@ -94,3 +94,12 @@ def CLAHE(img):
     clahe = cv2.createCLAHE(clipLimit=5)
     img = clahe.apply(img)
     return img
+
+def sharpening_image(img):
+    # create a sharpening kernel
+    sharpen_filter = np.array([[-1, -1, -1],
+                               [-1, 9, -1],
+                               [-1, -1, -1]])
+    # applying kernels to the input image to get the sharpened image
+    sharp_image = cv2.filter2D(img, -1, sharpen_filter)
+    return sharp_image
