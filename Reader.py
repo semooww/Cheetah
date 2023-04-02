@@ -17,7 +17,7 @@ def create_dataset(df, mode=0, type=0, is_Test=0):  # 0->float32 1->uint8
     index = 0
     for path in df['paths']:
         if "3_retina_disease" in path:
-            index+=1
+            index += 1
             continue
         # According to parameter, we apply some preprocesses here. default=0
         img = T.deleteBlackAreas(path)  # deleting black areas. Initial preprocess
@@ -40,7 +40,7 @@ def create_dataset(df, mode=0, type=0, is_Test=0):  # 0->float32 1->uint8
             img2 = cv2.flip(img, 1)
             images.append(img2)
             labels.append(label)
-            img3= T.sharpening_image(img)
+            img3 = T.sharpening_image(img)
             images.append(img3)
             labels.append(label)
     if type == 0:
@@ -69,6 +69,14 @@ def augmentation(images, labels, mode, is_Test):
         ),
         iaa.Sometimes(
             0.5,
+            iaa.AdditiveGaussianNoise(scale=(0, 0.2 * 255))
+        ),
+        iaa.Sometimes(
+            0.5,
+            iaa.pillike.EnhanceSharpness()
+        ),
+        iaa.Sometimes(
+            0.5,
             iaa.LinearContrast((0.75, 1.5)),
         ),
         iaa.Affine(
@@ -90,7 +98,7 @@ def augmentation(images, labels, mode, is_Test):
             images_result = np.concatenate((images, images_augmented))
             labels_result = np.concatenate((labels, labels))
         elif i == 1:
-            for k in range(1):
+            for k in range(2):
                 ia.seed(seeds[k])
                 images_augmented = func(images=images)
                 images_result = np.concatenate((images_result, images_augmented))

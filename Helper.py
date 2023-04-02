@@ -2,10 +2,17 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import ConfusionMatrixDisplay
 from sklearn.metrics import confusion_matrix
 import numpy as np
+import os
 
 
 # Display the distribution of data on the train and test
-def plot_pie_sets(arrays, technique):
+def plot_pie_sets(arrays, technique, model_info):
+    MAIN_PATH = r"Plots"
+    os.makedirs(MAIN_PATH, exist_ok=True)
+    MODEL_PATH = os.path.join(MAIN_PATH, model_info)
+    os.makedirs(MODEL_PATH, exist_ok=True)
+    PATH = os.path.join(MODEL_PATH, f"{technique}_pie.png")
+
     titles = ["Train Set", "Test Set"]
     labels = ["Normal", "Cataract", "Glaucoma"]
     fig = plt.figure(figsize=(12, 5))
@@ -20,10 +27,16 @@ def plot_pie_sets(arrays, technique):
         plt.title(titles[i])
         plt.pie(arr, autopct=lambda x: '{:.0f}'.format(x * np.array(arr).sum() / 100))
         plt.legend(labels=labels, loc=0)
-    plt.savefig(f"Plots/{technique}_pie.png")
+    plt.savefig(PATH)
 
 
-def plot_history(arrays, technique):
+def plot_history(arrays, technique, model_info):
+    MAIN_PATH = r"Plots"
+    os.makedirs(MAIN_PATH, exist_ok=True)
+    MODEL_PATH = os.path.join(MAIN_PATH, model_info)
+    os.makedirs(MODEL_PATH, exist_ok=True)
+    PATH = os.path.join(MODEL_PATH, f"{technique}_history.png")
+
     fig = plt.figure(figsize=(15, 6))
     plt.title(f"Evaluation for {technique} Images")
     plt.axis('off')
@@ -44,10 +57,16 @@ def plot_history(arrays, technique):
     plt.ylabel("Loss")
     plt.xlabel("Epochs")
     plt.legend(["Train", "Validation"], loc=0)
-    plt.savefig(f"Plots/{technique}_history.png")
+    plt.savefig(PATH)
 
 
-def plot_conf_matrix(model, X_test, y_test, technique):
+def plot_conf_matrix(model, X_test, y_test, technique, model_info):
+    MAIN_PATH = r"Plots"
+    os.makedirs(MAIN_PATH, exist_ok=True)
+    MODEL_PATH = os.path.join(MAIN_PATH, model_info)
+    os.makedirs(MODEL_PATH, exist_ok=True)
+    PATH = os.path.join(MODEL_PATH, f"{technique}_confusion_matrix.png")
+
     labels = ["Normal", "Cataract", "Glaucoma"]
     y_pred = model.predict(X_test)
     cm = confusion_matrix(np.argmax(y_test, axis=1), np.argmax(y_pred, axis=1))
@@ -55,7 +74,7 @@ def plot_conf_matrix(model, X_test, y_test, technique):
     disp.plot(cmap=plt.cm.Blues)
     plt.grid(False)
     plt.title(f"Confusion Matrix of {technique}")
-    plt.savefig(f"Plots/{technique}_confusion_matrix.png")
+    plt.savefig(PATH)
     ret1, ret2 = cm_evaluation(cm)
     return ret1, ret2
 
